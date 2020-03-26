@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: mafcs-d-bancos-coordenadas
+  config:
+    name: ${spring.application.name}
+  profiles:
+    active:
+    - DEV
+server:
+  port: 8086
+

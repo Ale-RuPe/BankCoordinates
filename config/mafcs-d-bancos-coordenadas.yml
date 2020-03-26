@@ -1,0 +1,11 @@
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      username: admin
+      password: admin
+      database: Bancos-DEV
+      host: localhost
+      port: 27017
+controller:
+  uri: /api/v1/bancos/coordenadas/

@@ -3,9 +3,17 @@ spring:
     name: mafcs-d-bancos-coordenadas
   config:
     name: ${spring.application.name}
+  cloud:
+    config:
+      uri: http://localhost:8888
   profiles:
     active:
     - DEV
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761
 server:
-  port: 8086
+  port: 8090
 

@@ -8,10 +8,13 @@ import org.springframework.stereotype.Component;
 
 import com.ibm.bancos.dao.BancosDAO;
 import com.ibm.bancos.entity.Banco;
-import com.ibm.bancos.model.RetrieveSucursalesResponse;
+import com.ibm.bancos.model.BancoModel;
 import com.ibm.bancos.repository.BancoRepository;
 import com.ibm.bancos.utils.Location;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class BancosDAOImpl implements BancosDAO{
 	@Autowired
@@ -21,15 +24,16 @@ public class BancosDAOImpl implements BancosDAO{
 	Location locate;
 	@Override
 	
-	public RetrieveSucursalesResponse findByCoordinates(String lat, String lon) {
+	public List<BancoModel> findByCoordinates(Double lat, Double lon) {
 		List<Banco> bancos = repository.findAll();
 		
-		RetrieveSucursalesResponse response = new RetrieveSucursalesResponse();
-		response.setSucuarsales( bancos.stream()
+		List<BancoModel> s = bancos.stream()
 				.filter(banco -> locate.isNear( locate.getDistance(lat, lon, banco.getGeometry().getCoordinates() ) ) )
-				.map(banco -> locate.createResponse(banco, lat, lon))
-				.collect( Collectors.toList() ) );
-		return response;
+				.map(banco -> locate.createResponse(banco))
+				.collect( Collectors.toList() );
+		
+		log.info("Retrieves?: {}", s.size());
+		return s;
 	}
 	
 	

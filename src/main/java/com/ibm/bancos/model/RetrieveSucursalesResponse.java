@@ -14,5 +14,5 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RetrieveSucursalesResponse {
-	List<RetrieveSucursal> sucuarsales;
+	List<BancoModel> sucuarsales;
 }

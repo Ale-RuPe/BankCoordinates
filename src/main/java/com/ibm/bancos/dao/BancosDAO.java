@@ -1,8 +1,10 @@
 package com.ibm.bancos.dao;
 
-import com.ibm.bancos.model.RetrieveSucursalesResponse;
+import java.util.List;
+
+import com.ibm.bancos.model.BancoModel;
 
 
 public interface BancosDAO {
-	RetrieveSucursalesResponse findByCoordinates(String latitud, String longitud);
+	List<BancoModel> findByCoordinates(Double latitud, Double longitud);
 }

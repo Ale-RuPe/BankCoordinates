@@ -4,7 +4,7 @@ package com.ibm.bancos.utils.impl;
 import org.springframework.stereotype.Component;
 
 import com.ibm.bancos.entity.Banco;
-import com.ibm.bancos.model.RetrieveSucursal;
+import com.ibm.bancos.model.BancoModel;
 import com.ibm.bancos.utils.Location;
 
 @Component
@@ -12,12 +12,14 @@ public class LocationImpl implements Location{
 
 	@Override
 	public boolean isNear(Double distancia) {
-		return distancia < 3 ? true : false;
+		boolean isnear = distancia < 3 ? true : false; 
+
+		return isnear;
 	}
 
 	@Override
-	public RetrieveSucursal createResponse(Banco banco, String lat, String lon) {
-		RetrieveSucursal response = new RetrieveSucursal();
+	public BancoModel createResponse(Banco banco) {
+		BancoModel response = new BancoModel();
 		
 		response.setDireccion(banco.getPropiedades().getDireccion());
 		response.setEstado(banco.getPropiedades().getEstado());
@@ -31,12 +33,12 @@ public class LocationImpl implements Location{
 	}
 
 	@Override
-	public Double getDistance(String lat1, String lon1, Double[] coordinates) {
+	public Double getDistance(Double lat1, Double lon1, Double[] coordinates) {
 		
 		final int R = 6371; // Radious of the earth in KM
 		
-		Double lattitude1 = Double.parseDouble(lat1);
-		Double longitude1 = Double.parseDouble(lon1);		
+		Double lattitude1 = lat1;
+		Double longitude1 = lon1;		
 		Double lattitude2 = coordinates[1];
 		Double longitude2 = coordinates[0];
 		

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,12 +24,11 @@ public class BancosCoordenadasController {
 	@GetMapping("${controller.uri}")
 	public ResponseEntity<List<BancoModel>> getBancos(
 			@RequestParam Double gpsCoordX,
-			@RequestParam Double gpsCoordY){
+			@RequestParam Double gpsCoordY) throws MissingServletRequestParameterException{
 			
-		log.info("Controller values {},{}",gpsCoordX,gpsCoordY);
-		
+		log.info("Request values {},{}",gpsCoordX,gpsCoordY);
 		List<BancoModel> response = service.findBancos(gpsCoordX, gpsCoordY);
-		log.info("Bancos {}",response.size());
+		log.info("Response {}",response.size());
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

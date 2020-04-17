@@ -6,7 +6,7 @@ import lombok.Getter;
 public class BadRequestException extends RuntimeException{
 	private static final long serialVersionUID = 1L;
 	
-	private final String location; //the location of the error
+	private String location; //the location of the error
 	private String uri;
 	
 	public BadRequestException(String message, String location,String uri) {
@@ -15,4 +15,3 @@ public class BadRequestException extends RuntimeException{
 	    this.uri = uri;
 	}
 }
-

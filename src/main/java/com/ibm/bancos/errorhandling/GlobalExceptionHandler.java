@@ -1,17 +1,20 @@
 package com.ibm.bancos.errorhandling;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.ibm.bancos.model.ErrorResponse;
 import com.ibm.bancos.model.exceptions.BadRequestException;
 import com.ibm.bancos.model.exceptions.NotFoundException;
+import com.ibm.bancos.properties.Properties;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,6 +22,20 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @EnableWebMvc
 public class GlobalExceptionHandler {
+	@Autowired
+	Properties prop;
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException( MethodArgumentTypeMismatchException e){
+		log.info("Method Argument Type Mismatch");
+		ErrorResponse response = getErrorResponse( 
+				ErrorType.INVALID.toString(), 
+				String.valueOf( HttpStatus.BAD_REQUEST.value()), 
+				e.getName(), prop.getBadRequestMsg() , prop.getControllerUri() );
+		
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
 	
 	/**
 	 * Handle BadRequestException
@@ -28,10 +45,10 @@ public class GlobalExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(value = BadRequestException.class)
 	public ResponseEntity<ErrorResponse> handleBadRequestException( BadRequestException e){
-		log.info("Missing Params Exception");
-		ErrorResponse response = getErrorResponse( 
-				ErrorType.ERROR.toString(), 
-				String.valueOf( HttpStatus.BAD_REQUEST.value()), 
+		log.info("Bad Request Exception");
+		//String type, String code,String details, String location, String more
+		ErrorResponse response = getErrorResponse(ErrorType.INVALID.toString(), 
+				String.valueOf(HttpStatus.BAD_REQUEST.value()), 
 				e.getMessage(), e.getLocation(), e.getUri() );
 		
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -68,7 +85,7 @@ public class GlobalExceptionHandler {
 		ErrorResponse response = getErrorResponse( 
 				ErrorType.ERROR.toString(), 
 				String.valueOf( HttpStatus.BAD_REQUEST.value()), 
-				"${exceptions.message.badrequest}", ex.getMessage(), ex.getLocalizedMessage() );
+				prop.getBadRequestMsg(), prop.getMissingRequestParamMsg(), ex.getParameterName() );
 		
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
@@ -86,7 +103,7 @@ public class GlobalExceptionHandler {
 		ErrorResponse response = getErrorResponse( 
 					ErrorType.ERROR.toString(), 
 					String.valueOf( HttpStatus.NOT_FOUND.value()), 
-					"${exceptions.message.notfound}", ex.getRequestURL(), ex.getHttpMethod() );
+					prop.getNotFoundMsg(), ex.getRequestURL(), ex.getHttpMethod() );
 		
 		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}

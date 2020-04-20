@@ -25,7 +25,7 @@ public class BancosCoordenadasController {
 	BancosCoordenadasService service;
 	
 	@Autowired
-	private Validator validator;
+	Validator validator;
 	
 	@GetMapping("${controller.uri}")
 	public ResponseEntity<List<BancoModel>> getBancos(@RequestHeader HttpHeaders httpHeaders,
@@ -34,7 +34,7 @@ public class BancosCoordenadasController {
 		log.info("Headers {}", httpHeaders.toString());
 		validator.validateHeaders(httpHeaders.toSingleValueMap());
 		
-		log.info("Request values {},{}",gpsCoordX,gpsCoordY);
+		log.info("Request params {},{}",gpsCoordX,gpsCoordY);
 		validator.validateParams(gpsCoordX, gpsCoordY);
 		
 		List<BancoModel> response = service.findBancos(gpsCoordX, gpsCoordY);
